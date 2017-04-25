@@ -127,25 +127,23 @@
           rejectedNumbers.push(collection[i]);
         }
     }
-    /*
-    var arrayHasNot = function(passedTest, target) {
-        // iterate through collection
-        for (var i = 0; i < collection.length; i++) {
-          if (collection[i] === target) {
-            return false;
-          }
-        }
-          // if current element === target
-            // found === true
-        return true;
-    }
-    */
-    //rejectedNumbers = _.filter(collection,  );
     return rejectedNumbers;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var removeDuplicates = [];
+    var uniques = new Set();
+
+    for (var i = 0; i < array.length; i++) {
+      uniques.add(array[i]);
+    }
+    //iterate through uniques
+    for (var key of uniques) {
+      //push keys onto remove duplicates
+      removeDuplicates.push(key);
+    }
+    return removeDuplicates;
   };
 
 
