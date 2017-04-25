@@ -7,6 +7,7 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
+    return val;
   };
 
   /**
@@ -36,7 +37,16 @@
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
-  _.last = function(array, n) {
+  _.last = function(array, index) {
+    if (index === 0) {
+      return [];
+    } else if (index > array.length) {
+      return array;
+    } else if (index === undefined) {
+      return array.pop();
+    } else {
+      return array.slice(index - 1, array.length);
+    }
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -44,7 +54,24 @@
   //
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
+  //arguments[0]=collection
+  //arguments[1]=iterator
   _.each = function(collection, iterator) {
+    if (Array.isArray(collection) === true) {
+      for (var i = 0; i < collection.length; i++) {
+        if (arguments[2] === undefined) {
+          iterator(collection[i]);
+        } else {
+          console.log(iterator([collection[i], i]));
+        }
+
+      }
+    } else {
+      for (var key in collection) {
+        iterator(collection[key]);
+      }
+    }
+
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -107,19 +134,19 @@
   // Reduces an array or object to a single value by repetitively calling
   // iterator(accumulator, item) for each item. accumulator should be
   // the return value of the previous iterator call.
-  //  
+  //
   // You can pass in a starting value for the accumulator as the third argument
   // to reduce. If no starting value is passed, the first element is used as
   // the accumulator, and is never passed to the iterator. In other words, in
   // the case where a starting value is not passed, the iterator is not invoked
   // until the second element, with the first element as its second argument.
-  //  
+  //
   // Example:
   //   var numbers = [1,2,3];
   //   var sum = _.reduce(numbers, function(total, number){
   //     return total + number;
   //   }, 0); // should be 6
-  //  
+  //
   //   var identity = _.reduce([5], function(total, number){
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
