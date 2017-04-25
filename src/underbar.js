@@ -59,16 +59,24 @@
   _.each = function(collection, iterator) {
     if (Array.isArray(collection) === true) {
       for (var i = 0; i < collection.length; i++) {
-        if (arguments[2] === undefined) {
+        if (iterator.length  === 1) {
           iterator(collection[i]);
-        } else {
-          console.log(iterator([collection[i], i]));
+        } else if (iterator.length === 2) {
+          iterator(collection[i], i);
+        } else if (iterator.length === 3) {
+          iterator(collection[i], i, collection);
         }
-
       }
     } else {
       for (var key in collection) {
-        iterator(collection[key]);
+        if (iterator.length === 1) {
+          iterator(collection[key]);
+        } else if (iterator.length === 2) {
+          iterator(collection[key], key);
+        } else if (iterator.length === 3) {
+          iterator(collection[key], key, collection);
+        }
+
       }
     }
 
@@ -93,12 +101,47 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var passedTest = [];
+    //iterate through collection
+      //if the current element passes the test
+        //push current element into array
+    for (var i = 0; i < collection.length; i++) {
+      if(test(collection[i]) === true) {
+        passedTest.push(collection[i]);
+      }
+    }
+    return passedTest;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    var rejectedNumbers = [];
+    var passedTest = _.filter(collection, test);
+    //iterate through the collection
+      //if collection element does not equal passTest element
+        //push collection element to rejected numbers
+    for (var i = 0; i < collection.length; i++) {
+        if (_.indexOf(passedTest,collection[i]) === -1) {
+          rejectedNumbers.push(collection[i]);
+        }
+    }
+    /*
+    var arrayHasNot = function(passedTest, target) {
+        // iterate through collection
+        for (var i = 0; i < collection.length; i++) {
+          if (collection[i] === target) {
+            return false;
+          }
+        }
+          // if current element === target
+            // found === true
+        return true;
+    }
+    */
+    //rejectedNumbers = _.filter(collection,  );
+    return rejectedNumbers;
   };
 
   // Produce a duplicate-free version of the array.
