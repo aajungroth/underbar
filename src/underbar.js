@@ -149,6 +149,11 @@
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
+    var mapped = [];
+    for (var i = 0; i < collection.length; i++) {
+      mapped.push(iterator(collection[i]));
+    }
+    return mapped;
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -192,7 +197,24 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
+  //input collection, iterator function, optional accumulator
+  //ouput accumulator
   _.reduce = function(collection, iterator, accumulator) {
+    var total = accumulator;
+
+    if (accumulator === undefined) {
+      total = collection[0];
+      for (var i = 0; i < collection.length - 1; i++) {
+        total = iterator(total, collection[i + 1]);
+      }
+    } else {
+      //iterate through the collection
+        //do iterate function on each element in collection
+      for (var i = 0; i < collection.length; i++) {
+        total = iterator(total, collection[i]);
+      }
+    }
+    return total;
   };
 
   // Determine if the array or object contains a given value (using `===`).
