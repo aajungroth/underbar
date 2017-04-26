@@ -43,7 +43,7 @@
     } else if (index > array.length) {
       return array;
     } else if (index === undefined) {
-      return array.pop();
+      return array[array.length - 1];
     } else {
       return array.slice(index - 1, array.length);
     }
@@ -201,17 +201,22 @@
   //ouput accumulator
   _.reduce = function(collection, iterator, accumulator) {
     var total = accumulator;
-
-    if (accumulator === undefined) {
-      total = collection[0];
-      for (var i = 0; i < collection.length - 1; i++) {
-        total = iterator(total, collection[i + 1]);
+    if (Array.isArray(collection) === true) {
+      if (accumulator === undefined) {
+        total = collection[0];
+        for (var i = 0; i < collection.length - 1; i++) {
+          total = iterator(total, collection[i + 1]);
+        }
+      } else {
+        //iterate through the collection
+          //do iterate function on each element in collection
+        for (var i = 0; i < collection.length; i++) {
+          total = iterator(total, collection[i]);
+        }
       }
     } else {
-      //iterate through the collection
-        //do iterate function on each element in collection
-      for (var i = 0; i < collection.length; i++) {
-        total = iterator(total, collection[i]);
+      for (var key in collection) {
+        total = iterator(total, collection[key]);
       }
     }
     return total;
@@ -232,6 +237,24 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    return _.reduce(collection, function (isPassing,item) {
+      if (isPassing === false) {
+        return false;
+      } else if (iterator === undefined) {
+        if (JSON.stringify(item) === JSON.stringify({})) {
+          return true;
+        } else {
+          return item == true;
+        }
+      } else {
+        if (JSON.stringify(iterator(item)) === JSON.stringify({})) {
+          return true;
+        } else {
+          return iterator(item) == true;
+        }
+      }
+    }, true);
+    // Default value is true
     // TIP: Try re-using reduce() here.
   };
 
