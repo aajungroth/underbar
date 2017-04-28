@@ -79,7 +79,6 @@
 
       }
     }
-
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -237,7 +236,7 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    return _.reduce(collection, function (isPassing,item) {
+    return _.reduce(collection, function (isPassing, item) {
       if (isPassing === false) {
         return false;
       } else if (iterator === undefined) {
@@ -262,8 +261,48 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-  };
+    //Reduce passes the accumulator and then the new value into the iterator
+    //so if two values are given, by the default iterator should return the
+    //second element, since the first will be the default value true
 
+    //I'm having trouble getting the tests that use the identity function to work
+    //because of the way I implemented reduce and every,
+    /*
+    if ((iterator === undefined) || (iterator.length === 1)) {
+      iterator = function() {
+        return arguments[1];
+      };
+    }
+
+    for (var i = 0; i < collection.length; i++) {
+      if (_.every(collection[i], iterator)) {
+        return true;
+      }
+    }
+    return false;
+    */
+    return _.reduce(collection, function (isPassing,item) {
+      if (isPassing === true) {
+        return true;
+      } else if (iterator === undefined) {
+        if (JSON.stringify(item) === JSON.stringify({})) {
+          return true;
+        } else if ((typeof item === 'string') && (item.length > 0)) {
+          return true;
+        } else {
+          return item == true;
+        }
+      } else {
+        if (JSON.stringify(iterator(item)) === JSON.stringify({})) {
+          return true;
+        } else if ((typeof item === 'string') && (item.length > 0)) {
+          return true;
+        } else {
+          return iterator(item) == true;
+        }
+      }
+    }, false);
+  };
 
   /**
    * OBJECTS
@@ -283,14 +322,50 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
+
+  //input an object of key value pairs to be updated and
+    //additional objects that will update the first object
+  //ouput the first object with the updated key value pairs
+  //procedure add the new pairs to the first obj,
+    //or overwrite values of existing keys
   _.extend = function(obj) {
+    var sourceObjs = [];
+
+    for (var i = 1; i < arguments.length; i++) {
+      sourceObjs.push(arguments[i]);
+    }
+    //iterate through the arguments after obj
+      //for each object
+        //update the first obj with the key-value pairs
+    for (var i = 0; i < sourceObjs.length; i++) {
+      for (var key in sourceObjs[i]) {
+        obj[key] = sourceObjs[i][key];
+      }
+    }
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-  };
+    var sourceObjs = [];
 
+    for (var i = 1; i < arguments.length; i++) {
+      sourceObjs.push(arguments[i]);
+    }
+    //iterate throught the arguments after obj
+      //iterate through the key-value pairs in the objects
+        //if a key doesn't exist in obj
+          //then add it to obj
+    for (var i = 0; i < sourceObjs.length; i++) {
+      for (var key in sourceObjs[i]) {
+        if (obj.hasOwnProperty(key) === false) {
+          obj[key] = sourceObjs[i][key];
+        }
+      }
+    }
+    return obj;
+  };
 
   /**
    * FUNCTIONS
