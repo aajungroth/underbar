@@ -427,6 +427,21 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    //input take the arguments after somefunction and the wait
+    //push the arguments to an accessible array
+    var argArr = [];
+
+    //use a for loop to push in to an array
+    for (var i = 0; i < arguments.length; i++) {
+      argArr.push(arguments[i]);
+    }
+
+    //take just the needed arguments
+    var args = argArr.slice(2);
+
+    return setTimeout(function(){
+      func.apply(this, args);
+    }, wait);
   };
 
 
@@ -441,6 +456,27 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    //copy the array
+    var copy = array.slice();
+    var shuffled = [];
+    //swap or...
+    //add the number to a new shuffled array
+
+    //produce a random number of an index
+    var randomIndex = Math.floor(Math.random() * (copy.length - 1));
+
+    //make a loop that goes thru the copy array starting from the random index
+    while(copy.length > 0) {
+      var temp;
+      temp = copy[randomIndex];
+      shuffled.push(temp);
+      // copy.length = copy.length - 1
+      copy.splice(randomIndex, 1);
+      // update ranodm number
+      randomIndex = Math.floor(Math.random() * (copy.length - 1));
+    }
+    // return the new suffled array
+    return shuffled;
   };
 
 
