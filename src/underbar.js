@@ -491,6 +491,10 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    return _.map(collection, function(item) {
+      var newItem = typeof functionOrKey === 'string' ? item[functionOrKey] : functionOrKey;
+      return newItem.apply(item, args);
+    });
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -498,6 +502,15 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+   if (typeof iterator === 'string') {
+     return collection.sort(function(a, b) {
+       return a[iterator] - b[iterator];
+     });
+   } else {
+     return collection.sort(function(a, b) {
+       return iterator(a) - iterator(b);
+     });
+   }
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -506,6 +519,36 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+   // var zippedArrays = []
+   // use arguments going into zip and
+   var zippedArrays = [];
+   // use each to go through each argument
+   // each (arguments, function (item))
+
+   var largestLength = 0;
+
+   _.each(arguments, function(item) {
+
+     if (item.length > largestLength ) {
+       largestLength = item.length;
+     }
+
+   })
+
+   for (var i = 0; i < largestLength; i++) {
+     zippedArrays.push([]);
+   }
+
+   _.each(arguments, function(item) {
+
+     for (var i = 0; i < largestLength; i++) {
+       zippedArrays[i].push(item[i]);
+     }
+
+   });
+   // for loop to push
+   // return  zipped arrays []
+   return zippedArrays;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
@@ -513,6 +556,11 @@
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    _.each(nestedArray, function(item) {
+      if (Array.isArray(item))
+        nestedArray = _.flatten([].concat.apply([], nestedArray));
+    });
+   return nestedArray;
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
